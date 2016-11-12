@@ -10,6 +10,9 @@ ext {
     supportVersion = '25.0.0'
     gsonVersion = '2.8.0'
     retrofitVersion = '2.1.0'
+    retrofitAdapterVersion = '1.0.0'
+    junitVersion = '4.12'
+    espressoVersion = '2.2.2'
 }
 
 android {
@@ -50,8 +53,8 @@ android {
 dependencies {
 
     //Tests
-    testCompile 'junit:junit:4.12'
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    testCompile "junit:junit:${junitVersion}"
+    androidTestCompile("com.android.support.test.espresso:espresso-core:${espressoVersion}", {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
@@ -74,5 +77,5 @@ dependencies {
     //Network
     compile "com.squareup.retrofit2:retrofit:${retrofitVersion}"
     compile "com.squareup.retrofit2:converter-gson:${retrofitVersion}"
-    compile "com.squareup.retrofit2:adapter-rxjava:${retrofitVersion}"
+    compile "com.jakewharton.retrofit:retrofit2-rxjava2-adapter:${retrofitAdapterVersion}"
 }
