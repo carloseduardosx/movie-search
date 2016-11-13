@@ -2,9 +2,9 @@ package com.carloseduardo.movie.search.application;
 
 import android.app.Application;
 
-import com.carloseduardo.movie.search.component.ApplicationComponent;
-import com.carloseduardo.movie.search.component.DaggerApplicationComponent;
-import com.carloseduardo.movie.search.module.ApplicationModule;
+import com.carloseduardo.movie.search.dagger.component.ApplicationComponent;
+import com.carloseduardo.movie.search.dagger.component.DaggerApplicationComponent;
+import com.carloseduardo.movie.search.dagger.module.ApplicationModule;
 
 public class MovieSearchApplication extends Application {
 

@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.carloseduardo.movie.search.application.MovieSearchApplication;
-import com.carloseduardo.movie.search.component.ApplicationComponent;
+import com.carloseduardo.movie.search.dagger.component.ApplicationComponent;
 
 public abstract class BaseActivity extends AppCompatActivity {
 

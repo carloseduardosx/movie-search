@@ -1,10 +1,10 @@
-package com.carloseduardo.movie.search.component;
+package com.carloseduardo.movie.search.dagger.component;
 
 import android.content.Context;
 
 import com.carloseduardo.movie.search.activity.BaseActivity;
 import com.carloseduardo.movie.search.activity.MovieListActivity;
-import com.carloseduardo.movie.search.module.ApplicationModule;
+import com.carloseduardo.movie.search.dagger.module.ApplicationModule;
 
 import javax.inject.Singleton;
 
