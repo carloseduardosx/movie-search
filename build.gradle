@@ -1,15 +1,26 @@
 buildscript {
+
+    ext.realmVersion = '2.2.0'
+    ext.androidGradlePluginVersion = '2.2.2'
+    ext.androidAptVersion = '1.8'
+
     repositories {
+
         jcenter()
     }
+
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.2'
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+
+        classpath "io.realm:realm-gradle-plugin:${realmVersion}"
+        classpath "com.android.tools.build:gradle:${androidGradlePluginVersion}"
+        classpath "com.neenbedankt.gradle.plugins:android-apt:${androidAptVersion}"
     }
 }
 
 allprojects {
+
     repositories {
+
         jcenter()
     }
 }

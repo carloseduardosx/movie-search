@@ -2,9 +2,12 @@ package com.carloseduardo.movie.search.application;
 
 import android.app.Application;
 
-import com.carloseduardo.movie.search.dagger.component.ApplicationComponent;
-import com.carloseduardo.movie.search.dagger.component.DaggerApplicationComponent;
-import com.carloseduardo.movie.search.dagger.module.ApplicationModule;
+import com.carloseduardo.movie.search.injector.component.ApplicationComponent;
+import com.carloseduardo.movie.search.injector.component.DaggerApplicationComponent;
+import com.carloseduardo.movie.search.injector.module.ApplicationModule;
+
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 public class MovieSearchApplication extends Application {
 
@@ -14,7 +17,18 @@ public class MovieSearchApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+        initRealm();
         initComponent();
+    }
+
+    private void initRealm() {
+
+        Realm.init(this);
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
+                .deleteRealmIfMigrationNeeded()
+                .build();
+
+        Realm.setDefaultConfiguration(realmConfiguration);
     }
 
     private void initComponent() {

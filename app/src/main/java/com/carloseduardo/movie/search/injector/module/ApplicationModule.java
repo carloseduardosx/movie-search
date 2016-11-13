@@ -1,4 +1,4 @@
-package com.carloseduardo.movie.search.dagger.module;
+package com.carloseduardo.movie.search.injector.module;
 
 import android.content.Context;
 

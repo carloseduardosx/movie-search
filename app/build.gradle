@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'realm-android'
 
 ext {
 
@@ -13,6 +14,7 @@ ext {
     retrofitAdapterVersion = '1.0.0'
     junitVersion = '4.12'
     espressoVersion = '2.2.2'
+    lombokVersion = '1.16.10'
 }
 
 android {
@@ -78,4 +80,7 @@ dependencies {
     compile "com.squareup.retrofit2:retrofit:${retrofitVersion}"
     compile "com.squareup.retrofit2:converter-gson:${retrofitVersion}"
     compile "com.jakewharton.retrofit:retrofit2-rxjava2-adapter:${retrofitAdapterVersion}"
+
+    //Boilerplate Generation
+    provided "org.projectlombok:lombok:${lombokVersion}"
 }

@@ -1,11 +1,11 @@
-package com.carloseduardo.movie.search.activity;
+package com.carloseduardo.movie.search.base;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.carloseduardo.movie.search.application.MovieSearchApplication;
-import com.carloseduardo.movie.search.dagger.component.ApplicationComponent;
+import com.carloseduardo.movie.search.injector.component.ApplicationComponent;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -14,7 +14,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         getComponent().inject(this);
-        injectMember();
+        inject();
     }
 
     protected MovieSearchApplication getMovieSearchApplication() {
@@ -27,5 +27,5 @@ public abstract class BaseActivity extends AppCompatActivity {
         return getMovieSearchApplication().getComponent();
     }
 
-    abstract protected void injectMember();
+    abstract protected void inject();
 }
