@@ -1,18 +1,19 @@
 package com.carloseduardo.movie.search.data.source;
 
 import com.carloseduardo.movie.search.data.model.Movie;
+import com.carloseduardo.movie.search.data.model.MoviesContent;
 
 import java.util.List;
 
+import io.reactivex.Observable;
+
 public interface MoviesDataSource {
 
-    void save(Movie movie);
+    void save(MoviesContent moviesContent);
 
-    void save(List<Movie> movies);
+    Observable<Movie> getMovie();
 
-    Movie getMovie();
-
-    List<Movie> getMovies();
+    Observable<List<Movie>> listMovies();
 
     void remove(Movie movie);
 

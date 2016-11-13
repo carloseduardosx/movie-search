@@ -15,6 +15,12 @@ ext {
     junitVersion = '4.12'
     espressoVersion = '2.2.2'
     lombokVersion = '1.16.10'
+    butterKnifeVersion = '8.4.0'
+}
+
+
+def getAPIProperty(String key) {
+    return hasProperty(key) ? getProperty(key) : System.getenv(key)
 }
 
 android {
@@ -30,6 +36,8 @@ android {
         versionCode 1
         versionName '1.0'
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+
+        buildConfigField 'String', 'TMD_API_KEY', getAPIProperty('TMD_API_KEY')
     }
 
     buildTypes {
@@ -83,4 +91,8 @@ dependencies {
 
     //Boilerplate Generation
     provided "org.projectlombok:lombok:${lombokVersion}"
+
+    //View Binding
+    compile "com.jakewharton:butterknife:${butterKnifeVersion}"
+    apt "com.jakewharton:butterknife-compiler:${butterKnifeVersion}"
 }

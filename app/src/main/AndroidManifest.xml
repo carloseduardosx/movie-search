@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.carloseduardo.movie.search">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".application.MovieSearchApplication"
         android:allowBackup="true"

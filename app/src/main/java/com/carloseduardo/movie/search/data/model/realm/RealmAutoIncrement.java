@@ -30,10 +30,8 @@ public class RealmAutoIncrement {
         if (isValidMethodCall()) {
 
             Integer id = updateIdByClassName(clazz);
-            Log.d(TAG, "getNextIdFromModel: " + id);
             return id;
         }
-        Log.d(TAG, "getNextIdFromModel is called by a not valid method");
         return null;
     }
 

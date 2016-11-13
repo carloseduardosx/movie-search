@@ -6,22 +6,20 @@ import com.carloseduardo.movie.search.data.model.exception.UnknownModelException
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@Data
+@EqualsAndHashCode(callSuper = false)
 public class AutoIncrement extends RealmObject {
 
     @Required
     @PrimaryKey
-    private Integer _id = 1;
+    private Integer id = 1;
 
-    @Getter
-    @Setter
     private Integer movie;
 
-    public Integer getId() {
-        return _id;
-    }
+    private Integer moviesContent;
 
     public void incrementByClassName(String className) {
 
@@ -29,6 +27,10 @@ public class AutoIncrement extends RealmObject {
 
             case KnownModel.MOVIE:
                 movie = movie == null ? 1 : ++movie;
+                break;
+
+            case KnownModel.MOVIES_CONTENT:
+                moviesContent = moviesContent == null ? 1 : ++moviesContent;
                 break;
 
             default:
@@ -42,6 +44,9 @@ public class AutoIncrement extends RealmObject {
 
             case KnownModel.MOVIE:
                 return this.movie;
+
+            case KnownModel.MOVIES_CONTENT:
+                return this.moviesContent;
 
             default:
                 throw new UnknownModelException("Class name: " + className);
