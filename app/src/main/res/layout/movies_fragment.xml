@@ -14,6 +14,6 @@
         app:layout_moreProgress="@layout/layout_more_progress"
         app:mainLayoutId="@layout/layout_recyclerview_verticalscroll"
         app:recyclerPadding="16dp"
-        app:scrollbarStyle="insideInset" />
+        app:scrollbarStyle="outsideOverlay" />
 
 </RelativeLayout>

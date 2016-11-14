@@ -18,6 +18,7 @@ ext {
     butterKnifeVersion = '8.4.0'
     superRecyclerViewVersion = '1.1.4'
     picassoVersion = '2.5.2'
+    labelViewVersion = 'v1.1.1'
 }
 
 
@@ -98,6 +99,7 @@ dependencies {
 
     //Custom View
     compile "com.malinskiy:superrecyclerview:${superRecyclerViewVersion}"
+    compile "com.github.linger1216:labelview:${labelViewVersion}"
 
     //View Binding
     compile "com.jakewharton:butterknife:${butterKnifeVersion}"

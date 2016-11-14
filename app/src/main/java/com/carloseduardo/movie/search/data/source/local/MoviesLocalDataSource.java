@@ -34,7 +34,7 @@ public class MoviesLocalDataSource {
                 Until the realm instance is closed and reopened again
                 Should be resolved at later release
                  */
-                if (realm != null && !realm.isClosed()) {
+                if (isRealmNotClosed(realm)) {
 
                     realm.close();
                 }
@@ -47,8 +47,16 @@ public class MoviesLocalDataSource {
             return moviesContent == null ? new MoviesContent() : realm.copyFromRealm(moviesContent);
         } finally {
 
-            realm.close();
+            if (isRealmNotClosed(realm)) {
+
+                realm.close();
+            }
         }
+    }
+
+    private boolean isRealmNotClosed(Realm realm) {
+
+        return realm != null && !realm.isClosed();
     }
 
     public List<Movie> pagination(int page) throws IndexOutOfBoundsException {

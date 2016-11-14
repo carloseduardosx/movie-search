@@ -5,15 +5,17 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.carloseduardo.movie.search.R;
 import com.carloseduardo.movie.search.data.model.Movie;
 import com.carloseduardo.movie.search.data.source.constants.API;
+import com.lid.lib.LabelImageView;
 import com.squareup.picasso.Picasso;
 
+import java.util.Calendar;
 import java.util.List;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder>{
@@ -39,11 +41,17 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
 
         Movie movie = movies.get(position);
         String endpoint = API.IMG_ENDPOINT;
-        String imagePath = movie.getPosterPath();
+        String imagePath = movie.getBackdropPath();
+        Calendar movieDate = Calendar.getInstance();
+        movieDate.setTime(movie.getReleaseDate());
 
         holder.overview.setText(movie.getOverview());
+        holder.title.setText(movie.getTitle());
+        holder.movieImage.setLabelText(String.valueOf(movieDate.get(Calendar.YEAR)));
         Picasso.with(holder.movieImage.getContext())
                 .load(endpoint + imagePath)
+                .placeholder(R.drawable.no_image)
+                .error(R.drawable.no_image)
                 .into(holder.movieImage);
     }
 
@@ -65,14 +73,18 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         LinearLayout parentView;
-        ImageView movieImage;
+        RelativeLayout parentTextView;
+        LabelImageView movieImage;
         TextView overview;
+        TextView title;
 
         ViewHolder(View rootView) {
             super(rootView);
-            parentView = (LinearLayout) rootView.findViewById(R.id.card_item_container);
-            movieImage = (ImageView) parentView.findViewById(R.id.movie_img);
-            overview = (TextView) parentView.findViewById(R.id.movie_overview);
+            parentView = (LinearLayout) rootView.findViewById(R.id.card_container);
+            movieImage = (LabelImageView) parentView.findViewById(R.id.movie_img);
+            parentTextView = (RelativeLayout) parentView.findViewById(R.id.card_text_container);
+            overview = (TextView) parentTextView.findViewById(R.id.movie_overview);
+            title = (TextView) parentTextView.findViewById(R.id.movie_title);
         }
     }
 }
