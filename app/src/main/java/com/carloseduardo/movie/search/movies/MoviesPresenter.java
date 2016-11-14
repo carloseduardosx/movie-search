@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import com.carloseduardo.movie.search.data.model.Movie;
 import com.carloseduardo.movie.search.data.source.MoviesRepository;
 import com.carloseduardo.movie.search.movies.adapter.MoviesAdapter;
+import com.carloseduardo.movie.search.movies.listener.EndlessScrollListener;
 
 import java.util.List;
 
@@ -32,25 +33,39 @@ public class MoviesPresenter implements MoviesContract.Presenter {
                     @Override
                     public void accept(List<Movie> movies) throws Exception {
 
-                        view.showMovies(movies);
+                        if (movies.isEmpty()) {
+
+                            view.showWithoutNetwork();
+                        } else {
+
+                            view.hideWithoutNetwork();
+                            view.showMovies(movies);
+                        }
                     }
                 });
     }
 
     @Override
-    public void loadNextPage(int page, final RecyclerView view) {
+    public void loadNextPage(int page, final RecyclerView view,
+                             final EndlessScrollListener endlessScrollListener) {
 
         moviesRepository.loadNextPage(page)
                 .subscribe(new Consumer<List<Movie>>() {
                     @Override
                     public void accept(List<Movie> movies) throws Exception {
 
-                        MoviesAdapter adapter = (MoviesAdapter) view.getAdapter();
-                        List<Movie> currentMovies = adapter.getMovies();
-                        int lastMoviesListSize = currentMovies.size();
+                        if (!movies.isEmpty()) {
 
-                        currentMovies.addAll(movies);
-                        adapter.notifyItemRangeChanged(lastMoviesListSize, lastMoviesListSize + 9);
+                            MoviesAdapter adapter = (MoviesAdapter) view.getAdapter();
+                            List<Movie> currentMovies = adapter.getMovies();
+                            int lastMoviesListSize = currentMovies.size();
+
+                            currentMovies.addAll(movies);
+                            adapter.notifyItemRangeChanged(lastMoviesListSize, lastMoviesListSize + 9);
+                        } else {
+
+                            endlessScrollListener.backPage();
+                        }
                     }
                 });
     }

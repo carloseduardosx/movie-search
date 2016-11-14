@@ -94,5 +94,11 @@ public abstract class EndlessScrollListener extends RecyclerView.OnScrollListene
         this.loading = true;
     }
 
+    public void backPage() {
+
+        this.currentPage--;
+        this.loading = false;
+    }
+
     public abstract void onLoadMore(int page, int totalItemsCount, RecyclerView view);
 }

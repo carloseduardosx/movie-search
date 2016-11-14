@@ -19,6 +19,7 @@ ext {
     superRecyclerViewVersion = '1.1.4'
     picassoVersion = '2.5.2'
     labelViewVersion = 'v1.1.1'
+    jodaTimeAndroidVersion = '2.9.5'
 }
 
 
@@ -107,4 +108,7 @@ dependencies {
 
     //Image Loading
     compile "com.squareup.picasso:picasso:${picassoVersion}"
+
+    //JSR-310
+    compile "net.danlew:android.joda:${jodaTimeAndroidVersion}"
 }

@@ -16,6 +16,7 @@ import com.lid.lib.LabelImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder>{
@@ -40,14 +41,15 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         Movie movie = movies.get(position);
+        Date releaseDate = movie.getReleaseDate();
         String endpoint = API.IMG_ENDPOINT;
         String imagePath = movie.getBackdropPath();
         Calendar movieDate = Calendar.getInstance();
-        movieDate.setTime(movie.getReleaseDate());
+        movieDate.setTime(releaseDate == null ? new Date() : releaseDate);
 
         holder.overview.setText(movie.getOverview());
         holder.title.setText(movie.getTitle());
-        holder.movieImage.setLabelText(String.valueOf(movieDate.get(Calendar.YEAR)));
+        holder.movieImage.setLabelText(String.valueOf(releaseDate == null ? "" : movieDate.get(Calendar.YEAR)));
         Picasso.with(holder.movieImage.getContext())
                 .load(endpoint + imagePath)
                 .placeholder(R.drawable.no_image)

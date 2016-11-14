@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Movie Search</string>
     <string name="list_movies">List Movies</string>
+    <string name="without_network">Without Network</string>
 </resources>

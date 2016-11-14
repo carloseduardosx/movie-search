@@ -7,6 +7,8 @@ import com.carloseduardo.movie.search.injector.component.ApplicationComponent;
 import com.carloseduardo.movie.search.injector.component.DaggerApplicationComponent;
 import com.carloseduardo.movie.search.injector.module.ApplicationModule;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
@@ -21,6 +23,12 @@ public class MovieSearchApplication extends Application {
 
         initRealm();
         initComponent();
+        initJodaTime();
+    }
+
+    private void initJodaTime() {
+
+        JodaTimeAndroid.init(this);
     }
 
     private void initRealm() {

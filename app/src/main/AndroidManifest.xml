@@ -3,6 +3,7 @@
     package="com.carloseduardo.movie.search">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name=".application.MovieSearchApplication"
@@ -20,6 +21,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".moviedetail.MovieDetailActivity" />
+
+        <receiver android:name=".movies.receiver.NetworkStateChangeReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
 
     </application>
 

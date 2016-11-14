@@ -1,18 +1,23 @@
 package com.carloseduardo.movie.search.injector.module;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.wifi.WifiManager;
 
 import com.carloseduardo.movie.search.application.MovieSearchApplication;
 import com.carloseduardo.movie.search.data.source.MoviesRepository;
 import com.carloseduardo.movie.search.data.source.constants.API;
 import com.carloseduardo.movie.search.data.source.remote.interceptor.AuthorizationInterceptor;
 import com.carloseduardo.movie.search.data.source.remote.network.MovieNetwork;
+import com.carloseduardo.movie.search.data.source.remote.serializer.GsonDateSerializer;
+import com.carloseduardo.movie.search.helper.NetworkHelper;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Singleton;
@@ -59,6 +64,7 @@ public class ApplicationModule {
                         return false;
                     }
                 })
+                .registerTypeAdapter(Date.class, new GsonDateSerializer())
                 .create();
     }
 
@@ -95,8 +101,16 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    public MoviesRepository moviesRepository(final MovieNetwork movieNetwork) {
+    public ConnectivityManager wifiManager(final Context context) {
 
-        return new MoviesRepository(movieNetwork);
+        return (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    }
+
+    @Provides
+    @Singleton
+    public MoviesRepository moviesRepository(final MovieNetwork movieNetwork,
+                                             final ConnectivityManager connectivityManager) {
+
+        return new MoviesRepository(movieNetwork, new NetworkHelper(connectivityManager));
     }
 }

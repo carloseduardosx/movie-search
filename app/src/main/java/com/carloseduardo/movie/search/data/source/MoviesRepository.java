@@ -7,8 +7,10 @@ import com.carloseduardo.movie.search.data.model.MoviesContent;
 import com.carloseduardo.movie.search.data.source.local.MoviesLocalDataSource;
 import com.carloseduardo.movie.search.data.source.remote.MoviesRemoteDataSource;
 import com.carloseduardo.movie.search.data.source.remote.network.MovieNetwork;
+import com.carloseduardo.movie.search.helper.NetworkHelper;
 import com.carloseduardo.movie.search.helper.RealmHelper;
 
+import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -23,11 +25,13 @@ import io.realm.RealmList;
 public class MoviesRepository implements MoviesDataSource {
 
     private final String TAG = "MoviesRepository";
+    private final NetworkHelper networkHelper;
     private final MoviesLocalDataSource moviesLocalDataSource;
     private final MoviesRemoteDataSource moviesRemoteDataSource;
 
-    public MoviesRepository(MovieNetwork movieNetwork) {
+    public MoviesRepository(MovieNetwork movieNetwork, NetworkHelper networkHelper) {
 
+        this.networkHelper = networkHelper;
         moviesLocalDataSource = new MoviesLocalDataSource();
         moviesRemoteDataSource = new MoviesRemoteDataSource(movieNetwork);
     }
@@ -57,23 +61,29 @@ public class MoviesRepository implements MoviesDataSource {
 
                     if (movies.isEmpty()) {
 
-                        moviesRemoteDataSource.listMovies()
-                                .subscribe(new Consumer<MoviesContent>() {
-                                    @Override
-                                    public void accept(MoviesContent moviesContent) throws Exception {
+                        if (networkHelper.hasNetwork()) {
 
-                                        List<Movie> lastMovies = moviesContent.getMovies();
+                            moviesRemoteDataSource.listMovies()
+                                    .subscribe(new Consumer<MoviesContent>() {
+                                        @Override
+                                        public void accept(MoviesContent moviesContent) throws Exception {
 
-                                        save(moviesContent);
-                                        if (lastMovies.size() >= 10) {
+                                            List<Movie> lastMovies = moviesContent.getMovies();
 
-                                            subscriber.onNext(lastMovies.subList(0, 9));
-                                        } else {
+                                            save(moviesContent);
+                                            if (lastMovies.size() >= 10) {
 
-                                            subscriber.onNext(lastMovies);
+                                                subscriber.onNext(lastMovies.subList(0, 9));
+                                            } else {
+
+                                                subscriber.onNext(lastMovies);
+                                            }
                                         }
-                                    }
-                                });
+                                    });
+                        } else {
+
+                            subscriber.onNext(Collections.<Movie>emptyList());
+                        }
                     } else {
 
                         subscriber.onNext(realm.copyFromRealm(movies));
@@ -101,17 +111,23 @@ public class MoviesRepository implements MoviesDataSource {
 
                 if (movies == null || movies.isEmpty()) {
 
-                    moviesRemoteDataSource.listMovies()
-                            .subscribe(new Consumer<MoviesContent>() {
-                                @Override
-                                public void accept(MoviesContent moviesContent) throws Exception {
+                    if (networkHelper.hasNetwork()) {
 
-                                    Log.d(TAG, "Fetching data from internet");
+                        moviesRemoteDataSource.listMovies()
+                                .subscribe(new Consumer<MoviesContent>() {
+                                    @Override
+                                    public void accept(MoviesContent moviesContent) throws Exception {
 
-                                    save(moviesContent);
-                                    subscribe.onNext(moviesContent.getMovies().subList(0, 9));
-                                }
-                            });
+                                        Log.d(TAG, "Fetching data from internet");
+
+                                        save(moviesContent);
+                                        subscribe.onNext(moviesContent.getMovies().subList(0, 9));
+                                    }
+                                });
+                    } else {
+
+                        subscribe.onNext(Collections.<Movie>emptyList());
+                    }
                 } else {
 
                     subscribe.onNext(movies.subList(0, 9));

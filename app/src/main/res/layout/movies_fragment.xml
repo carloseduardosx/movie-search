@@ -16,4 +16,28 @@
         app:recyclerPadding="16dp"
         app:scrollbarStyle="outsideOverlay" />
 
+    <LinearLayout
+        android:id="@+id/without_network"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            android:layout_width="62dp"
+            android:layout_height="62dp"
+            android:tint="?android:textColorPrimary"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/ic_network_off" />
+
+        <TextView
+            android:id="@+id/without_network_text"
+            android:text="@string/without_network"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
 </RelativeLayout>
