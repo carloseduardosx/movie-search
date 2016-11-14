@@ -2,6 +2,7 @@ package com.carloseduardo.movie.search.application;
 
 import android.app.Application;
 
+import com.carloseduardo.movie.search.data.model.realm.SchemaMigration;
 import com.carloseduardo.movie.search.injector.component.ApplicationComponent;
 import com.carloseduardo.movie.search.injector.component.DaggerApplicationComponent;
 import com.carloseduardo.movie.search.injector.module.ApplicationModule;
@@ -11,6 +12,7 @@ import io.realm.RealmConfiguration;
 
 public class MovieSearchApplication extends Application {
 
+    public static final int DB_VERSION = 1;
     private ApplicationComponent applicationComponent;
 
     @Override
@@ -25,7 +27,8 @@ public class MovieSearchApplication extends Application {
 
         Realm.init(this);
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
-                .deleteRealmIfMigrationNeeded()
+                .migration(new SchemaMigration())
+                .schemaVersion(DB_VERSION)
                 .build();
 
         Realm.setDefaultConfiguration(realmConfiguration);

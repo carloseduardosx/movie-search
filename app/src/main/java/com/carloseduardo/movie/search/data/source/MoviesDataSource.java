@@ -13,6 +13,8 @@ public interface MoviesDataSource {
 
     Observable<Movie> getMovie();
 
+    Observable<List<Movie>> loadNextPage(final int page);
+
     Observable<List<Movie>> listMovies();
 
     void remove(Movie movie);

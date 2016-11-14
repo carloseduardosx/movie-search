@@ -1,58 +1,49 @@
 package com.carloseduardo.movie.search.movies;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
 
 import com.carloseduardo.movie.search.R;
 import com.carloseduardo.movie.search.base.BaseActivity;
-import com.carloseduardo.movie.search.data.model.Movie;
 import com.carloseduardo.movie.search.data.source.MoviesRepository;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.functions.Consumer;
+import io.realm.Realm;
 
 public class MoviesActivity extends BaseActivity {
+
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     @Inject
     MoviesRepository moviesRepository;
 
-    @BindView(R.id.list_movies)
-    Button listMovies;
+    private MoviesContract.Presenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.movies);
+        setContentView(R.layout.movies_activity);
         ButterKnife.bind(this);
+        Realm.init(getApplicationContext());
+        setSupportActionBar(toolbar);
 
-        listMovies.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                listMovies();
-            }
-        });
+        configureMoviesFragment();
     }
 
-    private void listMovies() {
+    private void configureMoviesFragment() {
 
-        moviesRepository.listMovies()
-                .subscribe(new Consumer<List<Movie>>() {
-                    @Override
-                    public void accept(List<Movie> movies) throws Exception {
+        MoviesFragment moviesFragment = new MoviesFragment();
+        presenter = new MoviesPresenter(moviesFragment, moviesRepository);
 
-                        Toast.makeText(MoviesActivity.this, "Movies Size: " + movies.size(), Toast.LENGTH_LONG)
-                                .show();
-                    }
-                });
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.movies_coordinator, moviesFragment)
+                .commit();
+
     }
 
     @Override

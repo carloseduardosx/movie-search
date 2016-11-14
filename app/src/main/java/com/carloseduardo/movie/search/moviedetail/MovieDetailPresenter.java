@@ -1,4 +1,4 @@
 package com.carloseduardo.movie.search.moviedetail;
 
-public class MovieDetailPresenter {
+public class MovieDetailPresenter implements MovieDetailContract.Presenter {
 }

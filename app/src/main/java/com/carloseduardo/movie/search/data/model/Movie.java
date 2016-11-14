@@ -15,6 +15,8 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper=false)
 public class Movie extends RealmObject {
 
+    public static final String POPULARITY = "popularity";
+
     @Required
     @PrimaryKey
     private Integer id = RealmAutoIncrement.getInstance().getNextIdFromModel(Movie.class);

@@ -1,45 +1,89 @@
 package com.carloseduardo.movie.search.data.source.local;
 
+import com.carloseduardo.movie.search.data.model.Movie;
 import com.carloseduardo.movie.search.data.model.MoviesContent;
 import com.carloseduardo.movie.search.helper.RealmHelper;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
+import java.util.Collections;
+import java.util.List;
+
 import io.realm.Realm;
+import io.realm.RealmResults;
+import io.realm.Sort;
 
 public class MoviesLocalDataSource {
 
-    private RealmHelper realmHelper = new RealmHelper();
+    private RealmHelper realmHelper = RealmHelper.getInstance();
 
-    public Observable<MoviesContent> listMovies() {
+    public MoviesContent listMovies() {
 
-        return Observable.create(new ObservableOnSubscribe<MoviesContent>() {
+        Realm realm = realmHelper.getRealmInstance();
 
-            @Override
-            public void subscribe(ObservableEmitter<MoviesContent> subscriber) throws Exception {
+        try {
 
-                Realm realm = realmHelper.getInstance();
+            MoviesContent moviesContent;
+            try {
 
-                try {
+                moviesContent = realm.where(MoviesContent.class)
+                        .findFirst();
+            } catch (NullPointerException e) {
 
-                    MoviesContent moviesContent = realm.where(MoviesContent.class)
-                            .findFirst();
-
-                    subscriber.onNext(moviesContent == null ? new MoviesContent() : realm.copyFromRealm(moviesContent));
-                } finally {
+                /*
+                Work around needed because of a bug at Realm querying
+                Realm doesn't get the reference for the MoviesContent table version
+                Until the realm instance is closed and reopened again
+                Should be resolved at later release
+                 */
+                if (realm != null && !realm.isClosed()) {
 
                     realm.close();
                 }
+                realm = realmHelper.getRealmInstance();
+
+                moviesContent = realm.where(MoviesContent.class)
+                        .findFirst();
             }
-        });
+
+            return moviesContent == null ? new MoviesContent() : realm.copyFromRealm(moviesContent);
+        } finally {
+
+            realm.close();
+        }
+    }
+
+    public List<Movie> pagination(int page) throws IndexOutOfBoundsException {
+
+        Realm realm = realmHelper.getRealmInstance();
+
+        try {
+            int firstPosition = page * 10;
+            int lastPosition = firstPosition + 9;
+
+            RealmResults<Movie> results = realm.where(Movie.class)
+                    .findAll()
+                    .sort(Movie.POPULARITY, Sort.DESCENDING);
+
+            if (lastPosition > results.size() - 1) {
+
+                return Collections.emptyList();
+            }
+
+            if (page == 0) {
+
+                return results.subList(0, 9);
+            } else {
+
+                return results.subList(firstPosition, lastPosition);
+            }
+        } finally {
+
+            realm.close();
+        }
     }
 
     public void save(final MoviesContent moviesContent) {
 
-        Realm realm = realmHelper.getInstance();
+        Realm realm = realmHelper.getRealmInstance();
 
         try {
 

@@ -3,6 +3,7 @@ package com.carloseduardo.movie.search.data.model.realm;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.carloseduardo.movie.search.application.MovieSearchApplication;
 import com.carloseduardo.movie.search.data.model.AutoIncrement;
 
 import io.realm.Realm;
@@ -109,7 +110,8 @@ public class RealmAutoIncrement {
     private RealmConfiguration getRealmConfiguration() {
 
         return new RealmConfiguration.Builder()
-                .deleteRealmIfMigrationNeeded()
+                .migration(new SchemaMigration())
+                .schemaVersion(MovieSearchApplication.DB_VERSION)
                 .build();
     }
 

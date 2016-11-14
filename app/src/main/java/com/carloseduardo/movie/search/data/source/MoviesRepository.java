@@ -7,6 +7,7 @@ import com.carloseduardo.movie.search.data.model.MoviesContent;
 import com.carloseduardo.movie.search.data.source.local.MoviesLocalDataSource;
 import com.carloseduardo.movie.search.data.source.remote.MoviesRemoteDataSource;
 import com.carloseduardo.movie.search.data.source.remote.network.MovieNetwork;
+import com.carloseduardo.movie.search.helper.RealmHelper;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import io.realm.Realm;
 import io.realm.RealmList;
 
 public class MoviesRepository implements MoviesDataSource {
@@ -27,7 +29,7 @@ public class MoviesRepository implements MoviesDataSource {
     public MoviesRepository(MovieNetwork movieNetwork) {
 
         moviesLocalDataSource = new MoviesLocalDataSource();
-        moviesRemoteDataSource =  new MoviesRemoteDataSource(movieNetwork);
+        moviesRemoteDataSource = new MoviesRemoteDataSource(movieNetwork);
     }
 
     @Override
@@ -42,6 +44,50 @@ public class MoviesRepository implements MoviesDataSource {
     }
 
     @Override
+    public Observable<List<Movie>> loadNextPage(final int page) {
+
+        return Observable.create(new ObservableOnSubscribe<List<Movie>>() {
+            @Override
+            public void subscribe(final ObservableEmitter<List<Movie>> subscriber) throws Exception {
+
+                final Realm realm = RealmHelper.getInstance().getRealmInstance();
+                List<Movie> movies = moviesLocalDataSource.pagination(page);
+
+                try {
+
+                    if (movies.isEmpty()) {
+
+                        moviesRemoteDataSource.listMovies()
+                                .subscribe(new Consumer<MoviesContent>() {
+                                    @Override
+                                    public void accept(MoviesContent moviesContent) throws Exception {
+
+                                        List<Movie> lastMovies = moviesContent.getMovies();
+
+                                        save(moviesContent);
+                                        if (lastMovies.size() >= 10) {
+
+                                            subscriber.onNext(lastMovies.subList(0, 9));
+                                        } else {
+
+                                            subscriber.onNext(lastMovies);
+                                        }
+                                    }
+                                });
+                    } else {
+
+                        subscriber.onNext(realm.copyFromRealm(movies));
+                    }
+                } finally {
+
+                    realm.close();
+                }
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
     public Observable<List<Movie>> listMovies() {
 
         return Observable.create(new ObservableOnSubscribe<List<Movie>>() {
@@ -49,39 +95,27 @@ public class MoviesRepository implements MoviesDataSource {
             @Override
             public void subscribe(final ObservableEmitter<List<Movie>> subscribe) throws Exception {
 
-                moviesLocalDataSource.listMovies()
-                        .subscribe(new Consumer<MoviesContent>() {
-                            @Override
-                            public void accept(MoviesContent moviesContent) throws Exception {
+                MoviesContent moviesContent = moviesLocalDataSource.listMovies();
 
-                                RealmList<Movie> movies = moviesContent.getMovies();
+                RealmList<Movie> movies = moviesContent.getMovies();
 
-                                if (movies == null || movies.isEmpty()) {
+                if (movies == null || movies.isEmpty()) {
 
-                                    moviesRemoteDataSource.listMovies()
-                                            .subscribe(new Consumer<MoviesContent>() {
-                                                @Override
-                                                public void accept(MoviesContent moviesContent) throws Exception {
+                    moviesRemoteDataSource.listMovies()
+                            .subscribe(new Consumer<MoviesContent>() {
+                                @Override
+                                public void accept(MoviesContent moviesContent) throws Exception {
 
-                                                    Log.d(TAG, "Fetching data from internet");
+                                    Log.d(TAG, "Fetching data from internet");
 
-                                                    MoviesContent moviesContentToSave = new MoviesContent();
-
-                                                    moviesContentToSave.setId(moviesContent.getId());
-                                                    moviesContentToSave.setMovies(moviesContent.getMovies());
-                                                    moviesContentToSave.setTotalPages(moviesContent.getTotalPages());
-                                                    moviesContentToSave.setTotalResults(moviesContent.getTotalResults());
-
-                                                    save(moviesContentToSave);
-                                                    subscribe.onNext(moviesContent.getMovies());
-                                                }
-                                            });
-                                } else {
-
-                                    subscribe.onNext(movies);
+                                    save(moviesContent);
+                                    subscribe.onNext(moviesContent.getMovies().subList(0, 9));
                                 }
-                            }
-                        });
+                            });
+                } else {
+
+                    subscribe.onNext(movies.subList(0, 9));
+                }
             }
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());

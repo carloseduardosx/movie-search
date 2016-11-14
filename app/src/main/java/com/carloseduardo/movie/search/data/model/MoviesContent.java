@@ -14,6 +14,8 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class MoviesContent extends RealmObject {
 
+    public static final String ID = "id";
+
     @Required
     @PrimaryKey
     @SerializedName("page")
