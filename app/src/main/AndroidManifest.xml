@@ -14,15 +14,22 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".movies.MoviesActivity"
+            android:name=".MovieSearchSplashActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|layoutDirection"
             android:launchMode="singleTask">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".movies.MoviesActivity"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|layoutDirection"
+            android:launchMode="singleTask" />
+
         <activity
             android:name=".moviedetail.MovieDetailActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|layoutDirection"
