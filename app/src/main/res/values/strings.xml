@@ -4,4 +4,11 @@
     <string name="list_movies">List Movies</string>
     <string name="without_network">Without Network</string>
     <string name="empty_results">Movies Not Found</string>
+    <string name="movie_not_found">Movie Not Found</string>
+    <string name="movie_original_title">Original title: </string>
+    <string name="movie_original_language">Original language: </string>
+    <string name="movie_adult">Adult: </string>
+    <string name="movie_overview">Overview: </string>
+    <string name="movie_release_date">Release date: </string>
+    <string name="movie_rating">Rating: </string>
 </resources>

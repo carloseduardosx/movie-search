@@ -1,4 +1,4 @@
-package com.carloseduardo.movie.search.movies.listener;
+package com.carloseduardo.movie.search.ui.movies.listener;
 
 public interface NetworkStateChangeListener {
 

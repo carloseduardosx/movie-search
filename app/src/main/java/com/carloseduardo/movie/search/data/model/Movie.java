@@ -15,6 +15,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper=false)
 public class Movie extends RealmObject {
 
+    public static final String ID = "id";
     public static final String POPULARITY = "popularity";
 
     @Required
@@ -50,5 +51,5 @@ public class Movie extends RealmObject {
     private Boolean video;
 
     @SerializedName("vote_average")
-    private Double voteAverage;
+    private Float voteAverage;
 }

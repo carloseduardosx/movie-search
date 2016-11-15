@@ -1,9 +1,7 @@
-package com.carloseduardo.movie.search.movies;
+package com.carloseduardo.movie.search.ui.movies;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 
 import com.carloseduardo.movie.search.R;
 import com.carloseduardo.movie.search.base.BaseActivity;
@@ -13,7 +11,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.realm.Realm;
 
 public class MoviesActivity extends BaseActivity {
 
@@ -30,7 +27,6 @@ public class MoviesActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.movies_activity);
         ButterKnife.bind(this);
-        Realm.init(getApplicationContext());
         setSupportActionBar(toolbar);
 
         configureMoviesFragment();

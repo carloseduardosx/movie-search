@@ -1,11 +1,11 @@
-package com.carloseduardo.movie.search.movies;
+package com.carloseduardo.movie.search.ui.movies;
 
 import android.support.v7.widget.RecyclerView;
 
 import com.carloseduardo.movie.search.base.BasePresenter;
 import com.carloseduardo.movie.search.base.BaseView;
 import com.carloseduardo.movie.search.data.model.Movie;
-import com.carloseduardo.movie.search.movies.listener.EndlessScrollListener;
+import com.carloseduardo.movie.search.ui.movies.listener.EndlessScrollListener;
 
 import java.util.List;
 

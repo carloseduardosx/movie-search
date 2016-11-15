@@ -15,6 +15,23 @@ public class MoviesLocalDataSource {
 
     private RealmHelper realmHelper = RealmHelper.getInstance();
 
+    public Movie getMovie(int id) {
+
+        Realm realm = realmHelper.getRealmInstance();
+
+        try {
+
+            Movie movie = realm.where(Movie.class)
+                    .equalTo(Movie.ID, id)
+                    .findFirst();
+
+            return realm.copyFromRealm(movie);
+        } finally {
+
+            realm.close();
+        }
+    }
+
     public MoviesContent listMovies() {
 
         Realm realm = realmHelper.getRealmInstance();

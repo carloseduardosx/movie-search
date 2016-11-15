@@ -4,4 +4,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="card_view_text_padding">10dp</dimen>
     <dimen name="card_view_text_padding_top">3dp</dimen>
+    <dimen name="movie_detail_content_margin">3dp</dimen>
+    <dimen name="movie_detail_label_margin">10dp</dimen>
+    <dimen name="movie_detail_rating_content_margin">7dp</dimen>
 </resources>

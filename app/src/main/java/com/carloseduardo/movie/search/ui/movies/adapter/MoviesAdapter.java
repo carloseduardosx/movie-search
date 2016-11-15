@@ -1,6 +1,9 @@
-package com.carloseduardo.movie.search.movies.adapter;
+package com.carloseduardo.movie.search.ui.movies.adapter;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,8 +13,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.carloseduardo.movie.search.R;
+import com.carloseduardo.movie.search.ui.constants.BundleKey;
 import com.carloseduardo.movie.search.data.model.Movie;
 import com.carloseduardo.movie.search.data.source.constants.API;
+import com.carloseduardo.movie.search.ui.moviedetail.MovieDetailActivity;
 import com.lid.lib.LabelImageView;
 import com.squareup.picasso.Picasso;
 
@@ -38,23 +43,25 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
 
-        Movie movie = movies.get(position);
+        final Movie movie = movies.get(position);
         Date releaseDate = movie.getReleaseDate();
         String endpoint = API.IMG_ENDPOINT;
         String imagePath = movie.getBackdropPath();
         Calendar movieDate = Calendar.getInstance();
         movieDate.setTime(releaseDate == null ? new Date() : releaseDate);
 
-        holder.overview.setText(movie.getOverview());
-        holder.title.setText(movie.getTitle());
-        holder.movieImage.setLabelText(String.valueOf(releaseDate == null ? "" : movieDate.get(Calendar.YEAR)));
         Picasso.with(holder.movieImage.getContext())
                 .load(endpoint + imagePath)
                 .placeholder(R.drawable.no_image)
                 .error(R.drawable.no_image)
                 .into(holder.movieImage);
+
+        configureListener(holder, movie);
+        holder.overview.setText(movie.getOverview());
+        holder.title.setText(movie.getTitle());
+        holder.movieImage.setLabelText(String.valueOf(releaseDate == null ? "" : movieDate.get(Calendar.YEAR)));
     }
 
     @Override
@@ -67,6 +74,21 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
         return movies;
     }
 
+    private void configureListener(final ViewHolder holder, final Movie movie) {
+
+        holder.rootView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Context context = holder.rootView.getContext();
+                Intent movieDetailActivityIntent = new Intent(context, MovieDetailActivity.class);
+
+                movieDetailActivityIntent.putExtra(BundleKey.MOVIE_ID, movie.getId());
+                context.startActivity(movieDetailActivityIntent);
+            }
+        });
+    }
+
     public void addMovies(@NonNull List<Movie> movies) {
 
         this.movies.addAll(movies);
@@ -74,6 +96,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
+        CardView rootView;
         LinearLayout parentView;
         RelativeLayout parentTextView;
         LabelImageView movieImage;
@@ -82,6 +105,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
 
         ViewHolder(View rootView) {
             super(rootView);
+            this.rootView = (CardView) rootView;
             parentView = (LinearLayout) rootView.findViewById(R.id.card_container);
             movieImage = (LabelImageView) parentView.findViewById(R.id.movie_img);
             parentTextView = (RelativeLayout) parentView.findViewById(R.id.card_text_container);

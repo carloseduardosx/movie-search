@@ -11,7 +11,7 @@ public interface MoviesDataSource {
 
     void save(MoviesContent moviesContent);
 
-    Observable<Movie> getMovie();
+    Movie getMovie(int id);
 
     Observable<List<Movie>> loadNextPage(final int page);
 

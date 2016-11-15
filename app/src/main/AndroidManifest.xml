@@ -14,7 +14,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".MovieSearchSplashActivity"
+            android:name=".ui.splash.MovieSearchSplashActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|layoutDirection"
             android:launchMode="singleTask">
 
@@ -26,16 +26,21 @@
         </activity>
 
         <activity
-            android:name=".movies.MoviesActivity"
+            android:name=".ui.movies.MoviesActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|layoutDirection"
             android:launchMode="singleTask" />
 
         <activity
-            android:name=".moviedetail.MovieDetailActivity"
+            android:name=".ui.moviedetail.MovieDetailActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|layoutDirection"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask">
 
-        <receiver android:name=".movies.receiver.NetworkStateChangeReceiver">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.movies.MoviesActivity" />
+        </activity>
+
+        <receiver android:name=".ui.movies.receiver.NetworkStateChangeReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />

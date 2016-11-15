@@ -1,4 +1,4 @@
-package com.carloseduardo.movie.search.movies;
+package com.carloseduardo.movie.search.ui.movies;
 
 import android.app.SearchManager;
 import android.content.Context;
@@ -20,10 +20,10 @@ import com.carloseduardo.movie.search.base.BaseFragment;
 import com.carloseduardo.movie.search.data.model.Movie;
 import com.carloseduardo.movie.search.data.source.MoviesRepository;
 import com.carloseduardo.movie.search.helper.RealmHelper;
-import com.carloseduardo.movie.search.movies.adapter.MoviesAdapter;
-import com.carloseduardo.movie.search.movies.listener.EndlessScrollListener;
-import com.carloseduardo.movie.search.movies.listener.NetworkStateChangeListener;
-import com.carloseduardo.movie.search.movies.observer.NetworkChangeObserver;
+import com.carloseduardo.movie.search.ui.movies.adapter.MoviesAdapter;
+import com.carloseduardo.movie.search.ui.movies.listener.EndlessScrollListener;
+import com.carloseduardo.movie.search.ui.movies.listener.NetworkStateChangeListener;
+import com.carloseduardo.movie.search.ui.movies.observer.NetworkChangeObserver;
 import com.malinskiy.superrecyclerview.SuperRecyclerView;
 
 import java.util.List;

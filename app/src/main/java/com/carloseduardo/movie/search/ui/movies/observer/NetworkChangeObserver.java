@@ -1,6 +1,6 @@
-package com.carloseduardo.movie.search.movies.observer;
+package com.carloseduardo.movie.search.ui.movies.observer;
 
-import com.carloseduardo.movie.search.movies.listener.NetworkStateChangeListener;
+import com.carloseduardo.movie.search.ui.movies.listener.NetworkStateChangeListener;
 
 import java.util.ArrayList;
 import java.util.List;

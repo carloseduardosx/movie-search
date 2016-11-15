@@ -1,4 +1,4 @@
-package com.carloseduardo.movie.search.movies.listener;
+package com.carloseduardo.movie.search.ui.movies.listener;
 
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;

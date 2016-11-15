@@ -1,4 +1,4 @@
-package com.carloseduardo.movie.search;
+package com.carloseduardo.movie.search.ui.splash;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,7 +6,8 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
-import com.carloseduardo.movie.search.movies.MoviesActivity;
+import com.carloseduardo.movie.search.R;
+import com.carloseduardo.movie.search.ui.movies.MoviesActivity;
 
 public class MovieSearchSplashActivity extends AppCompatActivity{
 

@@ -44,8 +44,9 @@ public class MoviesRepository implements MoviesDataSource {
     }
 
     @Override
-    public Observable<Movie> getMovie() {
-        return null;
+    public Movie getMovie(int id) {
+
+        return moviesLocalDataSource.getMovie(id);
     }
 
     @Override
