@@ -1,5 +1,6 @@
 package com.carloseduardo.movie.search.ui.movies.listener;
 
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,11 +13,13 @@ public abstract class EndlessScrollListener extends RecyclerView.OnScrollListene
     private int previousTotalItemCount = 0;
     private boolean loading = true;
     private int startingPageIndex = 0;
+    private FloatingActionButton fab;
 
     RecyclerView.LayoutManager mLayoutManager;
 
-    public EndlessScrollListener(LinearLayoutManager layoutManager) {
+    public EndlessScrollListener(LinearLayoutManager layoutManager, FloatingActionButton fab) {
         this.mLayoutManager = layoutManager;
+        this.fab = fab;
     }
 
     public EndlessScrollListener(GridLayoutManager layoutManager) {
@@ -85,6 +88,21 @@ public abstract class EndlessScrollListener extends RecyclerView.OnScrollListene
             onLoadMore(currentPage, totalItemCount, view);
             loading = true;
         }
+
+        if (dy > 0 || dy < 0 && fab.isShown()) {
+
+            fab.hide();
+        }
+    }
+
+    @Override
+    public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+
+        if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+
+            fab.show();
+        }
+        super.onScrollStateChanged(recyclerView, newState);
     }
 
     public void resetState() {

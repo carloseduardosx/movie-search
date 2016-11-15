@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -50,6 +51,9 @@ public class MoviesFragment extends BaseFragment implements MoviesContract.View,
 
     @BindView(R.id.empty_results)
     LinearLayout emptyResultsLayout;
+
+    @BindView(R.id.top_navigation_fab)
+    FloatingActionButton fab;
 
     private Unbinder unbinder;
     private SearchView searchView;
@@ -120,13 +124,14 @@ public class MoviesFragment extends BaseFragment implements MoviesContract.View,
 
         recycler.setLayoutManager(linearLayoutManager);
         recycler.setAdapter(moviesAdapter);
-        recycler.setOnScrollListener(new EndlessScrollListener(linearLayoutManager) {
+        recycler.setOnScrollListener(new EndlessScrollListener(linearLayoutManager, fab) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, final RecyclerView view) {
 
                 presenter.loadNextPage(page, view, this);
             }
         });
+        configureTopNavigation(linearLayoutManager);
     }
 
     @Override
@@ -137,13 +142,14 @@ public class MoviesFragment extends BaseFragment implements MoviesContract.View,
 
         recycler.setLayoutManager(linearLayoutManager);
         recycler.setAdapter(moviesAdapter);
-        recycler.setOnScrollListener(new EndlessScrollListener(linearLayoutManager) {
+        recycler.setOnScrollListener(new EndlessScrollListener(linearLayoutManager, fab) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, final RecyclerView view) {
 
                 presenter.loadNextSearchPage(page, view, this, searchView.getQuery().toString());
             }
         });
+        configureTopNavigation(linearLayoutManager);
     }
 
     @Override
@@ -224,6 +230,18 @@ public class MoviesFragment extends BaseFragment implements MoviesContract.View,
 
                 presenter.listMovies(true);
                 return false;
+            }
+        });
+    }
+
+    private void configureTopNavigation(final RecyclerView.LayoutManager layoutManager) {
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                layoutManager.scrollToPosition(0);
+                fab.hide();
             }
         });
     }

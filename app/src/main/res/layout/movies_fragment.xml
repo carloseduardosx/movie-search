@@ -16,6 +16,17 @@
         app:recyclerPadding="16dp"
         app:scrollbarStyle="outsideOverlay" />
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/top_navigation_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        android:visibility="gone"
+        android:elevation="5dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/ic_format_vertical_align_top"/>
+
     <LinearLayout
         android:id="@+id/without_network"
         android:layout_width="match_parent"
