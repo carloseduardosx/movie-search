@@ -15,15 +15,26 @@ public interface MoviesContract {
 
         void showMovies(List<Movie> movies);
 
+        void showSearchedMovies(List<Movie> movies);
+
         void hideWithoutNetwork();
 
         void showWithoutNetwork();
+
+        void hideEmptyResults();
+
+        void showEmptyResults();
     }
 
     interface Presenter extends BasePresenter {
 
-        void listMovies();
+        void listMovies(final boolean isToRemoveAll);
+
+        void searchMovies(String search);
 
         void loadNextPage(int page, final RecyclerView view, final EndlessScrollListener endlessScrollListener);
+
+        void loadNextSearchPage(int page, final RecyclerView view,
+                                final EndlessScrollListener endlessScrollListener, String search);
     }
 }

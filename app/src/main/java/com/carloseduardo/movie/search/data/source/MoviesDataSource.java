@@ -15,9 +15,11 @@ public interface MoviesDataSource {
 
     Observable<List<Movie>> loadNextPage(final int page);
 
-    Observable<List<Movie>> listMovies();
+    Observable<List<Movie>> loadNextSearchPage(final int page, String search);
 
-    void remove(Movie movie);
+    Observable<List<Movie>> listMovies(final boolean isToRemoveAll);
 
-    void remove(List<Movie> movies);
+    Observable<List<Movie>> searchMovies(String search);
+
+    void removeAll();
 }

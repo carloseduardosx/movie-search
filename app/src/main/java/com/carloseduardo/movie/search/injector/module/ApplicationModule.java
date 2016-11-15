@@ -2,7 +2,6 @@ package com.carloseduardo.movie.search.injector.module;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
-import android.net.wifi.WifiManager;
 
 import com.carloseduardo.movie.search.application.MovieSearchApplication;
 import com.carloseduardo.movie.search.data.source.MoviesRepository;

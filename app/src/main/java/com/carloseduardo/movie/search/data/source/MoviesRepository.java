@@ -21,6 +21,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 import io.realm.RealmList;
+import io.realm.RealmResults;
 
 public class MoviesRepository implements MoviesDataSource {
 
@@ -98,14 +99,74 @@ public class MoviesRepository implements MoviesDataSource {
     }
 
     @Override
-    public Observable<List<Movie>> listMovies() {
+    public Observable<List<Movie>> loadNextSearchPage(final int page, final String search) {
+
+        return Observable.create(new ObservableOnSubscribe<List<Movie>>() {
+            @Override
+            public void subscribe(final ObservableEmitter<List<Movie>> subscriber) throws Exception {
+
+                final Realm realm = RealmHelper.getInstance().getRealmInstance();
+
+                List<Movie> movies = moviesLocalDataSource.pagination(page);
+
+                try {
+
+                    if (movies.isEmpty()) {
+
+                        if (networkHelper.hasNetwork()) {
+
+                            moviesRemoteDataSource.search(search)
+                                    .subscribe(new Consumer<MoviesContent>() {
+                                        @Override
+                                        public void accept(MoviesContent moviesContent) throws Exception {
+
+                                            List<Movie> lastMovies = moviesContent.getMovies();
+
+                                            save(moviesContent);
+                                            if (lastMovies.size() >= 10) {
+
+                                                subscriber.onNext(lastMovies.subList(0, 9));
+                                            } else {
+
+                                                subscriber.onNext(lastMovies);
+                                            }
+                                        }
+                                    });
+                        } else {
+
+                            subscriber.onNext(Collections.<Movie>emptyList());
+                        }
+                    } else {
+
+                        subscriber.onNext(realm.copyFromRealm(movies));
+                    }
+                } finally {
+
+                    realm.close();
+                }
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable<List<Movie>> listMovies(final boolean isToRemoveAll) {
 
         return Observable.create(new ObservableOnSubscribe<List<Movie>>() {
 
             @Override
             public void subscribe(final ObservableEmitter<List<Movie>> subscribe) throws Exception {
 
-                MoviesContent moviesContent = moviesLocalDataSource.listMovies();
+                MoviesContent moviesContent;
+
+                if (isToRemoveAll) {
+
+                    removeAll();
+                    moviesContent = new MoviesContent();
+                } else {
+
+                    moviesContent = moviesLocalDataSource.listMovies();
+                }
 
                 RealmList<Movie> movies = moviesContent.getMovies();
 
@@ -118,10 +179,18 @@ public class MoviesRepository implements MoviesDataSource {
                                     @Override
                                     public void accept(MoviesContent moviesContent) throws Exception {
 
+                                        RealmList<Movie> movies = moviesContent.getMovies();
                                         Log.d(TAG, "Fetching data from internet");
 
                                         save(moviesContent);
-                                        subscribe.onNext(moviesContent.getMovies().subList(0, 9));
+
+                                        if (movies.size() >= 10) {
+
+                                            subscribe.onNext(movies.subList(0, 9));
+                                        } else {
+
+                                            subscribe.onNext(movies);
+                                        }
                                     }
                                 });
                     } else {
@@ -130,7 +199,7 @@ public class MoviesRepository implements MoviesDataSource {
                     }
                 } else {
 
-                    subscribe.onNext(movies.subList(0, 9));
+                    subscribe.onNext(movies.subList(0, movies.size() >= 10 ? 9 : movies.size() - 1));
                 }
             }
         }).subscribeOn(Schedulers.io())
@@ -138,12 +207,67 @@ public class MoviesRepository implements MoviesDataSource {
     }
 
     @Override
-    public void remove(Movie movie) {
+    public Observable<List<Movie>> searchMovies(final String search) {
 
+        return Observable.create(new ObservableOnSubscribe<List<Movie>>() {
+            @Override
+            public void subscribe(final ObservableEmitter<List<Movie>> subscribe) throws Exception {
+
+                removeAll();
+
+                if (networkHelper.hasNetwork()) {
+
+                    moviesRemoteDataSource.search(search)
+                            .subscribe(new Consumer<MoviesContent>() {
+                                @Override
+                                public void accept(MoviesContent moviesContent) throws Exception {
+
+                                    RealmList<Movie> movies = moviesContent.getMovies();
+
+                                    Log.d(TAG, "Fetching data from internet");
+
+                                    save(moviesContent);
+
+                                    if (movies.size() >= 10) {
+
+                                        subscribe.onNext(movies.subList(0, 9));
+                                    } else {
+
+                                        subscribe.onNext(movies);
+                                    }
+                                }
+                            });
+                } else {
+
+                    subscribe.onNext(Collections.<Movie>emptyList());
+                }
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
-    public void remove(List<Movie> movies) {
+    public void removeAll() {
 
+        Realm realm = RealmHelper.getInstance().getRealmInstance();
+
+        try {
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+
+                    RealmResults<MoviesContent> moviesContent = realm.where(MoviesContent.class).findAll();
+
+                    for (MoviesContent movieContent : moviesContent) {
+
+                        movieContent.getMovies().deleteAllFromRealm();
+                        movieContent.deleteFromRealm();
+                    }
+                }
+            });
+        } finally {
+
+            realm.close();
+        }
     }
 }

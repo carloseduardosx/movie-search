@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Movie Search</string>
+    <string name="movie_search">Movie Name</string>
     <string name="list_movies">List Movies</string>
     <string name="without_network">Without Network</string>
+    <string name="empty_results">Movies Not Found</string>
 </resources>

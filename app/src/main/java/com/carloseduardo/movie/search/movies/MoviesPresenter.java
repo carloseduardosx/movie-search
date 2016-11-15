@@ -26,9 +26,9 @@ public class MoviesPresenter implements MoviesContract.Presenter {
     }
 
     @Override
-    public void listMovies() {
+    public void listMovies(final boolean isToRemoveAll) {
 
-        moviesRepository.listMovies()
+        moviesRepository.listMovies(isToRemoveAll)
                 .subscribe(new Consumer<List<Movie>>() {
                     @Override
                     public void accept(List<Movie> movies) throws Exception {
@@ -39,7 +39,28 @@ public class MoviesPresenter implements MoviesContract.Presenter {
                         } else {
 
                             view.hideWithoutNetwork();
+                            view.hideEmptyResults();
                             view.showMovies(movies);
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void searchMovies(String search) {
+
+        moviesRepository.searchMovies(search)
+                .subscribe(new Consumer<List<Movie>>() {
+                    @Override
+                    public void accept(List<Movie> movies) throws Exception {
+
+                        if (movies.isEmpty()) {
+
+                            view.showEmptyResults();
+                        } else {
+
+                            view.hideEmptyResults();
+                            view.showSearchedMovies(movies);
                         }
                     }
                 });
@@ -66,6 +87,37 @@ public class MoviesPresenter implements MoviesContract.Presenter {
 
                             endlessScrollListener.backPage();
                         }
+                    }
+                });
+    }
+
+    @Override
+    public void loadNextSearchPage(int page, final RecyclerView view,
+                                   final EndlessScrollListener endlessScrollListener, String search) {
+
+        moviesRepository.loadNextSearchPage(page, search)
+                .subscribe(new Consumer<List<Movie>>() {
+                    @Override
+                    public void accept(List<Movie> movies) throws Exception {
+
+                        if (!movies.isEmpty()) {
+
+                            MoviesAdapter adapter = (MoviesAdapter) view.getAdapter();
+                            List<Movie> currentMovies = adapter.getMovies();
+                            int lastMoviesListSize = currentMovies.size();
+
+                            currentMovies.addAll(movies);
+                            adapter.notifyItemRangeChanged(lastMoviesListSize, lastMoviesListSize + 9);
+                        } else {
+
+                            endlessScrollListener.backPage();
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                        MoviesPresenter.this.view.showEmptyResults();
                     }
                 });
     }

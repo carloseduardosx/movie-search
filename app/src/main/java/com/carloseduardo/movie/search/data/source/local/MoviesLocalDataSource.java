@@ -99,7 +99,11 @@ public class MoviesLocalDataSource {
                 @Override
                 public void execute(Realm realm) {
 
-                    realm.copyToRealmOrUpdate(moviesContent);
+                    try {
+                        realm.copyToRealmOrUpdate(moviesContent);
+                    } catch (NullPointerException e) {
+                        //Realm lost reference to BaseRealm, should do nothing in this case
+                    }
                 }
             });
         } finally {

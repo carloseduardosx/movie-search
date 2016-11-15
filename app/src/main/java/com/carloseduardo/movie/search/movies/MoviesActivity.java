@@ -2,6 +2,7 @@ package com.carloseduardo.movie.search.movies;
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 
 import com.carloseduardo.movie.search.R;
 import com.carloseduardo.movie.search.base.BaseActivity;
