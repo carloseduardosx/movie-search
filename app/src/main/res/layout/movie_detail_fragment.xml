@@ -141,7 +141,7 @@
                 android:layout_height="62dp"
                 android:contentDescription="@string/app_name"
                 android:src="@drawable/ic_search_white_48dp"
-                android:tint="?android:textColorPrimary" />
+                android:tint="?textColorPrimary" />
 
             <TextView
                 android:id="@+id/movie_not_found_text"
