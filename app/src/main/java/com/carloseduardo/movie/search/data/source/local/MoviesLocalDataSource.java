@@ -1,5 +1,6 @@
 package com.carloseduardo.movie.search.data.source.local;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.carloseduardo.movie.search.data.model.Movie;
@@ -109,28 +110,36 @@ public class MoviesLocalDataSource {
 
     public List<Movie> pagination(int page) throws IndexOutOfBoundsException {
 
+
+        int firstPosition = page * 10;
+        int lastPosition = firstPosition + 10;
+
+        List<Movie> results = getSortedMovies();
+
+        if (lastPosition > results.size() - 1) {
+
+            return Collections.emptyList();
+        }
+
+        if (page == 0 && results.size() >= 10) {
+
+            return results.subList(0, 10);
+        } else {
+
+            return results.subList(firstPosition, lastPosition);
+        }
+    }
+
+    @NonNull
+    public List<Movie> getSortedMovies() {
+
         Realm realm = realmHelper.getRealmInstance();
 
         try {
-            int firstPosition = page * 10;
-            int lastPosition = firstPosition + 9;
 
-            RealmResults<Movie> results = realm.where(Movie.class)
+            return realm.where(Movie.class)
                     .findAll()
                     .sort(Movie.POPULARITY, Sort.DESCENDING);
-
-            if (lastPosition > results.size() - 1) {
-
-                return Collections.emptyList();
-            }
-
-            if (page == 0 && results.size() >= 10) {
-
-                return results.subList(0, 9);
-            } else {
-
-                return results.subList(firstPosition, lastPosition);
-            }
         } finally {
 
             realm.close();

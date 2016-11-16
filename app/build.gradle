@@ -6,9 +6,10 @@ ext {
 
     daggerVersion = '2.7'
     javaxAnnotationVersion = '10.0-b28'
+    rxJavaTestVersion = '1.1.0'
     rxJavaVersion = '2.0.0'
     rxAndroidVersion = '2.0.0'
-    supportVersion = '25.0.0'
+    supportVersion = '25.0.1'
     gsonVersion = '2.8.0'
     retrofitVersion = '2.1.0'
     retrofitAdapterVersion = '1.0.0'
@@ -20,6 +21,7 @@ ext {
     picassoVersion = '2.5.2'
     labelViewVersion = 'v1.1.1'
     jodaTimeAndroidVersion = '2.9.5'
+    mockitoVersion = '2.2.8'
 }
 
 
@@ -68,9 +70,8 @@ dependencies {
 
     //Tests
     testCompile "junit:junit:${junitVersion}"
-    androidTestCompile("com.android.support.test.espresso:espresso-core:${espressoVersion}", {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
+    testCompile "org.mockito:mockito-core:${mockitoVersion}"
+    testCompile "io.reactivex:rxjava:${rxJavaTestVersion}"
 
     //Compatibility
     compile "com.android.support:appcompat-v7:${supportVersion}"

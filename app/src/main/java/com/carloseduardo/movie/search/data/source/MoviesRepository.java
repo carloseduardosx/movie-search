@@ -75,7 +75,7 @@ public class MoviesRepository implements MoviesDataSource {
                                             save(moviesContent);
                                             if (lastMovies.size() >= 10) {
 
-                                                subscriber.onNext(lastMovies.subList(0, 9));
+                                                subscriber.onNext(lastMovies.subList(0, 10));
                                             } else {
 
                                                 subscriber.onNext(lastMovies);
@@ -126,7 +126,7 @@ public class MoviesRepository implements MoviesDataSource {
                                             save(moviesContent);
                                             if (lastMovies.size() >= 10) {
 
-                                                subscriber.onNext(lastMovies.subList(0, 9));
+                                                subscriber.onNext(lastMovies.subList(0, 10));
                                             } else {
 
                                                 subscriber.onNext(lastMovies);
@@ -187,7 +187,7 @@ public class MoviesRepository implements MoviesDataSource {
 
                                         if (movies.size() >= 10) {
 
-                                            subscribe.onNext(movies.subList(0, 9));
+                                            subscribe.onNext(movies.subList(0, 10));
                                         } else {
 
                                             subscribe.onNext(movies);
@@ -200,7 +200,7 @@ public class MoviesRepository implements MoviesDataSource {
                     }
                 } else {
 
-                    subscribe.onNext(movies.subList(0, movies.size() >= 10 ? 9 : movies.size() - 1));
+                    subscribe.onNext(movies.subList(0, movies.size() >= 10 ? 10 : movies.size() - 1));
                 }
             }
         }).subscribeOn(Schedulers.io())
@@ -231,7 +231,7 @@ public class MoviesRepository implements MoviesDataSource {
 
                                     if (movies.size() >= 10) {
 
-                                        subscribe.onNext(movies.subList(0, 9));
+                                        subscribe.onNext(movies.subList(0, 10));
                                     } else {
 
                                         subscribe.onNext(movies);
