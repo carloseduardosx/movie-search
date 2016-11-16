@@ -2,18 +2,18 @@
 
 ## Home
 
-<img src="![HOME](https://github.com/carloseduardosx/movie-search/blob/master/app/src/main/assets/movies.jpg" alt="HOME" width="240" height="180" border="10" />
+<img src="./app/src/main/assets/movies.jpg" alt="Home" width="284px" height="429px">
 
 ## Search
 
-![SEARCH](https://github.com/carloseduardosx/movie-search/blob/master/app/src/main/assets/search.jpg)
+<img src="./app/src/main/assets/search.jpg" alt="Search" width="284px" height="429px">
 
 ## Detail
 
-![DETAIL_1](https://github.com/carloseduardosx/movie-search/blob/master/app/src/main/assets/detail_1.jpg)
+<img src="./app/src/main/assets/detail_1.jpg" alt="Detail 1" width="284px" height="429px">
 
-![DETAIL_2](https://github.com/carloseduardosx/movie-search/blob/master/app/src/main/assets/detail_2.jpg)
+<img src="./app/src/main/assets/detail_2.jpg" alt="Detail 2" width="284px" height="429px">
 
 ## Splash
 
-![SPLASH](https://github.com/carloseduardosx/movie-search/blob/master/app/src/main/assets/splash.jpg)
+<img src="./app/src/main/assets/splash.jpg" alt="Splash" width="284px" height="429px">
