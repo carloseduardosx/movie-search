@@ -2,7 +2,7 @@
 
 ## Home
 
-![HOME](https://github.com/carloseduardosx/movie-search/blob/master/app/src/main/assets/movies.jpg)
+<img src="![HOME](https://github.com/carloseduardosx/movie-search/blob/master/app/src/main/assets/movies.jpg" alt="HOME" width="240" height="180" border="10" />
 
 ## Search
 
