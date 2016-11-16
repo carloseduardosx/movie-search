@@ -6,6 +6,10 @@
 
 ![Preview](https://github.com/carloseduardosx/movie-search/blob/master/app/src/main/assets/preview.gif)
 
+## Images
+
+You can see some more images about the application [here](https://github.com/carloseduardosx/movie-search/blob/master/IMAGES.md)
+
 ## License
 
 movie-search is released under the Apache License. See [LICENSE](https://github.com/carloseduardosx/movie-search/blob/master/LICENSE.md) for details.
