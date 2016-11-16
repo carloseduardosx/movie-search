@@ -4,7 +4,7 @@
 
 ## Preview
 
-![Preview](https://github.com/carloseduardosx/movie-search/blob/master/app/src/main/assets/preview.gif)
+<img src="./app/src/main/assets/preview.gif" alt="Preview" width="300px" height="500px">
 
 ## Images
 
