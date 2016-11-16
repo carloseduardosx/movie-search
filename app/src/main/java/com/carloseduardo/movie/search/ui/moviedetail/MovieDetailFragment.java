@@ -94,23 +94,29 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailCont
     @Override
     public void showMovie(Movie movie) {
 
-        LocalDate movieReleaseDate = LocalDate.fromDateFields(movie.getReleaseDate());
-        CollapsingToolbarLayout  collapsingToolbarLayout = (CollapsingToolbarLayout) getActivity().findViewById(R.id.collapsing_toolbar);
-        ImageView movieImageView = (ImageView) collapsingToolbarLayout.findViewById(R.id.movie_background_img);
+        if (movie == null) {
 
-        Picasso.with(movieImageView.getContext())
-                .load(API.IMG_ENDPOINT + movie.getBackdropPath())
-                .placeholder(R.drawable.no_image)
-                .error(R.drawable.no_image)
-                .into(movieImageView);
+            showNoResultFound();
+        } else {
 
-        collapsingToolbarLayout.setTitle(movie.getTitle());
-        originalTitle.setText(movie.getOriginalTitle());
-        originalLanguage.setText(movie.getOriginalLanguage());
-        adultContent.setChecked(movie.getAdult());
-        releaseDate.setText(movieReleaseDate.toString(DateTimeFormat.mediumDate()));
-        rating.setRating(movie.getVoteAverage() / 2);
-        overview.setText(movie.getOverview());
+            LocalDate movieReleaseDate = LocalDate.fromDateFields(movie.getReleaseDate());
+            CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) getActivity().findViewById(R.id.collapsing_toolbar);
+            ImageView movieImageView = (ImageView) collapsingToolbarLayout.findViewById(R.id.movie_background_img);
+
+            Picasso.with(movieImageView.getContext())
+                    .load(API.IMG_ENDPOINT + movie.getBackdropPath())
+                    .placeholder(R.drawable.no_image)
+                    .error(R.drawable.no_image)
+                    .into(movieImageView);
+
+            collapsingToolbarLayout.setTitle(movie.getTitle());
+            originalTitle.setText(movie.getOriginalTitle());
+            originalLanguage.setText(movie.getOriginalLanguage());
+            adultContent.setChecked(movie.getAdult());
+            releaseDate.setText(movieReleaseDate.toString(DateTimeFormat.mediumDate()));
+            rating.setRating(movie.getVoteAverage() / 2);
+            overview.setText(movie.getOverview());
+        }
     }
 
     @Override

@@ -24,6 +24,10 @@ public interface MoviesContract {
         void hideEmptyResults();
 
         void showEmptyResults();
+
+        void hideRefreshingLayout();
+
+        void hideTopNavigation();
     }
 
     interface Presenter extends BasePresenter {

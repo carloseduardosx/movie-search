@@ -39,25 +39,32 @@ public class RealmAutoIncrement {
     private Integer updateIdByClassName(final Class<? extends RealmObject> clazz) {
 
         Realm realm = getRealm();
-        final AutoIncrement autoIncrement = realm.where(AutoIncrement.class).findFirst();
 
-        if (realm.isInTransaction()) {
+        try {
 
-            autoIncrement.incrementByClassName(clazz.getSimpleName());
-            realm.copyToRealmOrUpdate(autoIncrement);
-        } else {
+            final AutoIncrement autoIncrement = realm.where(AutoIncrement.class).findFirst();
 
-            realm.executeTransaction(new Realm.Transaction() {
+            if (realm.isInTransaction()) {
 
-                @Override
-                public void execute(Realm realm) {
+                autoIncrement.incrementByClassName(clazz.getSimpleName());
+                realm.copyToRealmOrUpdate(autoIncrement);
+            } else {
 
-                    autoIncrement.incrementByClassName(clazz.getSimpleName());
-                    realm.copyToRealmOrUpdate(autoIncrement);
-                }
-            });
+                realm.executeTransaction(new Realm.Transaction() {
+
+                    @Override
+                    public void execute(Realm realm) {
+
+                        autoIncrement.incrementByClassName(clazz.getSimpleName());
+                        realm.copyToRealmOrUpdate(autoIncrement);
+                    }
+                });
+            }
+            return autoIncrement.findByClassName(clazz.getSimpleName());
+        } finally {
+
+            realm.close();
         }
-        return autoIncrement.findByClassName(clazz.getSimpleName());
     }
 
     /**
@@ -82,24 +89,39 @@ public class RealmAutoIncrement {
 
     private void createAutoIncrementEntityIfNotExist() {
 
-        AutoIncrement autoIncrement = getRealm().where(AutoIncrement.class).findFirst();
+        Realm realm = getRealm();
 
-        if (autoIncrement == null) {
+        try {
+            AutoIncrement autoIncrement = realm.where(AutoIncrement.class).findFirst();
 
-            createAutoIncrementEntity();
+            if (autoIncrement == null) {
+
+                createAutoIncrementEntity();
+            }
+        } finally {
+
+            realm.close();
         }
     }
 
     private void createAutoIncrementEntity() {
 
-        getRealm().executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
+        Realm realm = getRealm();
 
-                AutoIncrement autoIncrement = new AutoIncrement();
-                realm.copyToRealm(autoIncrement);
-            }
-        });
+        try {
+
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+
+                    AutoIncrement autoIncrement = new AutoIncrement();
+                    realm.copyToRealm(autoIncrement);
+                }
+            });
+        } finally {
+
+            realm.close();
+        }
     }
 
     private Realm getRealm() {

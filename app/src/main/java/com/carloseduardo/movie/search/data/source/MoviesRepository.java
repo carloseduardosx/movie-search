@@ -88,7 +88,7 @@ public class MoviesRepository implements MoviesDataSource {
                         }
                     } else {
 
-                        subscriber.onNext(realm.copyFromRealm(movies));
+                        subscriber.onNext(moviesLocalDataSource.extractFromRealm(realm, movies));
                     }
                 } finally {
 

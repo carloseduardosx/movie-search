@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -55,9 +56,14 @@ public class MoviesFragment extends BaseFragment implements MoviesContract.View,
     @BindView(R.id.top_navigation_fab)
     FloatingActionButton fab;
 
+    @BindView(R.id.swipe_refresh_movies_container)
+    SwipeRefreshLayout swipeRefreshMoviesLayout;
+
+    private boolean isSearchActivated = false;
     private Unbinder unbinder;
     private SearchView searchView;
     private MoviesContract.Presenter presenter;
+    private LinearLayoutManager linearLayoutManager;
     ScheduledThreadPoolExecutor scheduledThreadPoolExecutor = new ScheduledThreadPoolExecutor(1);
 
     @Override
@@ -73,6 +79,7 @@ public class MoviesFragment extends BaseFragment implements MoviesContract.View,
         View rootView = inflater.inflate(R.layout.movies_fragment, container, false);
         unbinder = ButterKnife.bind(this, rootView);
 
+        linearLayoutManager = new LinearLayoutManager(getContext());
         NetworkChangeObserver.getInstance().addListener(this);
         presenter.listMovies(false);
 
@@ -119,11 +126,27 @@ public class MoviesFragment extends BaseFragment implements MoviesContract.View,
     @Override
     public void showMovies(List<Movie> movies) {
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        MoviesAdapter moviesAdapter = new MoviesAdapter(movies);
+        if (recycler.getAdapter() == null) {
 
-        recycler.setLayoutManager(linearLayoutManager);
-        recycler.setAdapter(moviesAdapter);
+            MoviesAdapter moviesAdapter = new MoviesAdapter(movies);
+
+            recycler.setLayoutManager(linearLayoutManager);
+            recycler.setAdapter(moviesAdapter);
+            configureTopNavigation(linearLayoutManager);
+            configureSwipeRefreshMoviesLayout();
+        } else {
+
+            MoviesAdapter adapter = (MoviesAdapter) recycler.getAdapter();
+
+            adapter.clear();
+            adapter.addAll(movies);
+
+            if (swipeRefreshMoviesLayout.isRefreshing()) {
+
+                fab.hide();
+                swipeRefreshMoviesLayout.setRefreshing(false);
+            }
+        }
         recycler.setOnScrollListener(new EndlessScrollListener(linearLayoutManager, fab) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, final RecyclerView view) {
@@ -131,17 +154,16 @@ public class MoviesFragment extends BaseFragment implements MoviesContract.View,
                 presenter.loadNextPage(page, view, this);
             }
         });
-        configureTopNavigation(linearLayoutManager);
     }
 
     @Override
     public void showSearchedMovies(List<Movie> movies) {
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        MoviesAdapter moviesAdapter = new MoviesAdapter(movies);
+        MoviesAdapter adapter = (MoviesAdapter) recycler.getAdapter();
 
-        recycler.setLayoutManager(linearLayoutManager);
-        recycler.setAdapter(moviesAdapter);
+        adapter.clear();
+        adapter.addAll(movies);
+
         recycler.setOnScrollListener(new EndlessScrollListener(linearLayoutManager, fab) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, final RecyclerView view) {
@@ -149,7 +171,6 @@ public class MoviesFragment extends BaseFragment implements MoviesContract.View,
                 presenter.loadNextSearchPage(page, view, this, searchView.getQuery().toString());
             }
         });
-        configureTopNavigation(linearLayoutManager);
     }
 
     @Override
@@ -181,15 +202,68 @@ public class MoviesFragment extends BaseFragment implements MoviesContract.View,
     }
 
     @Override
+    public void hideRefreshingLayout() {
+
+        if (swipeRefreshMoviesLayout.isRefreshing()) {
+
+            swipeRefreshMoviesLayout.setRefreshing(false);
+        }
+    }
+
+    @Override
+    public void hideTopNavigation() {
+
+        if (fab.isShown()) {
+
+            fab.hide();
+        }
+    }
+
+    @Override
     public void stateChanged() {
 
         Realm realm = RealmHelper.getInstance().getRealmInstance();
-        RealmResults<Movie> movies = realm.where(Movie.class).findAll();
 
-        if (movies.isEmpty()) {
-            presenter.listMovies(false);
+        try {
+
+            RealmResults<Movie> movies = realm.where(Movie.class).findAll();
+
+            if (movies.isEmpty()) {
+                presenter.listMovies(false);
+            }
+        } finally {
+
+            realm.close();
         }
-        realm.close();
+    }
+
+    private void configureSwipeRefreshMoviesLayout() {
+
+        swipeRefreshMoviesLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                if (isSearchActivated) {
+
+                    String search = searchView.getQuery().toString();
+
+                    if (!search.isEmpty()) {
+
+                        presenter.searchMovies(search);
+                    } else {
+
+                        presenter.listMovies(true);
+                    }
+                } else {
+
+                    presenter.listMovies(true);
+                }
+            }
+        });
+        swipeRefreshMoviesLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
     }
 
     private void configureSearchView() {
@@ -208,6 +282,7 @@ public class MoviesFragment extends BaseFragment implements MoviesContract.View,
             @Override
             public boolean onQueryTextChange(String search) {
 
+                isSearchActivated = true;
                 if (search != null && !search.isEmpty()) {
 
                     if (scheduledThreadPoolExecutor == null) {
@@ -228,6 +303,7 @@ public class MoviesFragment extends BaseFragment implements MoviesContract.View,
             @Override
             public boolean onClose() {
 
+                isSearchActivated = false;
                 presenter.listMovies(true);
                 return false;
             }

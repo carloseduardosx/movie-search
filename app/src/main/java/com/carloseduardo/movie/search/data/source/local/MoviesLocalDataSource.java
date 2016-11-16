@@ -1,5 +1,7 @@
 package com.carloseduardo.movie.search.data.source.local;
 
+import android.util.Log;
+
 import com.carloseduardo.movie.search.data.model.Movie;
 import com.carloseduardo.movie.search.data.model.MoviesContent;
 import com.carloseduardo.movie.search.helper.RealmHelper;
@@ -13,6 +15,8 @@ import io.realm.Sort;
 
 public class MoviesLocalDataSource {
 
+    private final String TAG = "MoviesLocalDataSource";
+
     private RealmHelper realmHelper = RealmHelper.getInstance();
 
     public Movie getMovie(int id) {
@@ -25,7 +29,7 @@ public class MoviesLocalDataSource {
                     .equalTo(Movie.ID, id)
                     .findFirst();
 
-            return realm.copyFromRealm(movie);
+            return movie == null ? null : realm.copyFromRealm(movie);
         } finally {
 
             realm.close();
@@ -51,6 +55,7 @@ public class MoviesLocalDataSource {
                 Until the realm instance is closed and reopened again
                 Should be resolved at later release
                  */
+                Log.e(TAG, e.getMessage(), e);
                 if (isRealmNotClosed(realm)) {
 
                     realm.close();
@@ -61,13 +66,39 @@ public class MoviesLocalDataSource {
                         .findFirst();
             }
 
-            return moviesContent == null ? new MoviesContent() : realm.copyFromRealm(moviesContent);
+            return moviesContent == null ? new MoviesContent() : extractFromRealm(realm, moviesContent);
         } finally {
 
             if (isRealmNotClosed(realm)) {
 
                 realm.close();
             }
+        }
+    }
+
+    private MoviesContent extractFromRealm(Realm realm, MoviesContent moviesContent) {
+
+        try {
+
+            return realm.copyFromRealm(moviesContent);
+        } catch (IllegalStateException e) {
+
+            // Work around needed because realm in rare cases cannot get the latest version of data
+            Log.e(TAG, e.getMessage(), e);
+            return new MoviesContent();
+        }
+    }
+
+    public List<Movie> extractFromRealm(Realm realm, List<Movie> movies) {
+
+        try {
+
+            return realm.copyFromRealm(movies);
+        } catch (IllegalStateException e) {
+
+            // Work around needed because realm in rare cases cannot get the latest version of data
+            Log.e(TAG, e.getMessage(), e);
+            return Collections.emptyList();
         }
     }
 
@@ -93,7 +124,7 @@ public class MoviesLocalDataSource {
                 return Collections.emptyList();
             }
 
-            if (page == 0) {
+            if (page == 0 && results.size() >= 10) {
 
                 return results.subList(0, 9);
             } else {
@@ -120,6 +151,7 @@ public class MoviesLocalDataSource {
                         realm.copyToRealmOrUpdate(moviesContent);
                     } catch (NullPointerException e) {
                         //Realm lost reference to BaseRealm, should do nothing in this case
+                        Log.e(TAG, e.getMessage(), e);
                     }
                 }
             });

@@ -20,8 +20,6 @@ public class MoviesActivity extends BaseActivity {
     @Inject
     MoviesRepository moviesRepository;
 
-    private MoviesContract.Presenter presenter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +33,7 @@ public class MoviesActivity extends BaseActivity {
     private void configureMoviesFragment() {
 
         MoviesFragment moviesFragment = new MoviesFragment();
-        presenter = new MoviesPresenter(moviesFragment, moviesRepository);
+        new MoviesPresenter(moviesFragment, moviesRepository);
 
         getSupportFragmentManager()
                 .beginTransaction()

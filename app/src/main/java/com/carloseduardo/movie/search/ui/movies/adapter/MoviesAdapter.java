@@ -89,9 +89,15 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
         });
     }
 
-    public void addMovies(@NonNull List<Movie> movies) {
+    public void clear() {
+        movies.clear();
+        notifyDataSetChanged();
+    }
+
+    public void addAll(@NonNull List<Movie> movies) {
 
         this.movies.addAll(movies);
+        notifyDataSetChanged();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

@@ -36,6 +36,8 @@ public class MoviesPresenter implements MoviesContract.Presenter {
                         if (movies.isEmpty()) {
 
                             view.showWithoutNetwork();
+                            view.hideRefreshingLayout();
+                            view.hideTopNavigation();
                         } else {
 
                             view.hideWithoutNetwork();
@@ -57,9 +59,13 @@ public class MoviesPresenter implements MoviesContract.Presenter {
                         if (movies.isEmpty()) {
 
                             view.showEmptyResults();
+                            view.hideRefreshingLayout();
+                            view.hideTopNavigation();
                         } else {
 
                             view.hideEmptyResults();
+                            view.hideRefreshingLayout();
+                            view.hideTopNavigation();
                             view.showSearchedMovies(movies);
                         }
                     }

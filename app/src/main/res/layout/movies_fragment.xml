@@ -7,25 +7,32 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".ui.movies.MoviesActivity">
 
-    <com.malinskiy.superrecyclerview.SuperRecyclerView
-        android:id="@+id/list_movies"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_movies_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_moreProgress="@layout/layout_more_progress"
-        app:mainLayoutId="@layout/layout_recyclerview_verticalscroll"
-        app:recyclerPadding="16dp"
-        app:scrollbarStyle="outsideOverlay" />
+        android:layout_height="match_parent">
+
+        <com.malinskiy.superrecyclerview.SuperRecyclerView
+            android:id="@+id/list_movies"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_moreProgress="@layout/layout_more_progress"
+            app:mainLayoutId="@layout/layout_recyclerview_verticalscroll"
+            app:recyclerPadding="16dp"
+            app:scrollbarStyle="outsideOverlay" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/top_navigation_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        android:visibility="gone"
-        android:elevation="5dp"
-        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:src="@drawable/ic_format_vertical_align_top"/>
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/fab_margin"
+        android:elevation="5dp"
+        android:src="@drawable/ic_format_vertical_align_top"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/without_network"
@@ -39,15 +46,15 @@
         <ImageView
             android:layout_width="62dp"
             android:layout_height="62dp"
-            android:tint="?textColorPrimary"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/ic_network_off" />
+            android:src="@drawable/ic_network_off"
+            android:tint="?textColorPrimary" />
 
         <TextView
             android:id="@+id/without_network_text"
-            android:text="@string/without_network"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="@string/without_network" />
 
     </LinearLayout>
 
@@ -63,15 +70,15 @@
         <ImageView
             android:layout_width="62dp"
             android:layout_height="62dp"
-            android:tint="?textColorPrimary"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/ic_search_white_48dp" />
+            android:src="@drawable/ic_search_white_48dp"
+            android:tint="?textColorPrimary" />
 
         <TextView
             android:id="@+id/empty_results_text"
-            android:text="@string/empty_results"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="@string/empty_results" />
 
     </LinearLayout>
 

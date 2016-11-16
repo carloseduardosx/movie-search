@@ -26,12 +26,12 @@
 
             <ImageView
                 android:id="@+id/movie_background_img"
-                android:src="@drawable/no_image"
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
-                android:minHeight="250dp"
                 android:maxHeight="250dp"
+                android:minHeight="250dp"
                 android:scaleType="fitXY"
+                android:src="@drawable/no_image"
                 app:layout_collapseMode="parallax" />
 
             <android.support.v7.widget.Toolbar
@@ -46,16 +46,13 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <LinearLayout
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/movie_detail_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <FrameLayout
-            android:id="@+id/movie_detail_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 
 </android.support.design.widget.CoordinatorLayout>

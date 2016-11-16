@@ -22,8 +22,6 @@ public class MovieDetailActivity extends BaseActivity {
     @BindView(R.id.detail_toolbar)
     Toolbar toolbar;
 
-    private MovieDetailContract.Presenter presenter;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +41,7 @@ public class MovieDetailActivity extends BaseActivity {
     private void configureMovieDetailFragment() {
 
         MovieDetailFragment movieDetailFragment = new MovieDetailFragment();
-        presenter = new MovieDetailPresenter(movieDetailFragment, moviesRepository);
+        new MovieDetailPresenter(movieDetailFragment, moviesRepository);
 
         getSupportFragmentManager()
                 .beginTransaction()
