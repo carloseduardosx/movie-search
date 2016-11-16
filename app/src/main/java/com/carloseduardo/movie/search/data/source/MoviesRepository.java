@@ -70,16 +70,9 @@ public class MoviesRepository implements MoviesDataSource {
                                         @Override
                                         public void accept(MoviesContent moviesContent) throws Exception {
 
-                                            List<Movie> lastMovies = moviesContent.getMovies();
-
                                             save(moviesContent);
-                                            if (lastMovies.size() >= 10) {
-
-                                                subscriber.onNext(lastMovies.subList(0, 10));
-                                            } else {
-
-                                                subscriber.onNext(lastMovies);
-                                            }
+                                            List<Movie> lastMovies = moviesLocalDataSource.pagination(page);
+                                            subscriber.onNext(moviesLocalDataSource.extractFromRealm(realm, lastMovies));
                                         }
                                     });
                         } else {
@@ -121,16 +114,9 @@ public class MoviesRepository implements MoviesDataSource {
                                         @Override
                                         public void accept(MoviesContent moviesContent) throws Exception {
 
-                                            List<Movie> lastMovies = moviesContent.getMovies();
-
                                             save(moviesContent);
-                                            if (lastMovies.size() >= 10) {
-
-                                                subscriber.onNext(lastMovies.subList(0, 10));
-                                            } else {
-
-                                                subscriber.onNext(lastMovies);
-                                            }
+                                            List<Movie> lastMovies = moviesLocalDataSource.pagination(page);
+                                            subscriber.onNext(moviesLocalDataSource.extractFromRealm(realm, lastMovies));
                                         }
                                     });
                         } else {
@@ -139,7 +125,7 @@ public class MoviesRepository implements MoviesDataSource {
                         }
                     } else {
 
-                        subscriber.onNext(realm.copyFromRealm(movies));
+                        subscriber.onNext(moviesLocalDataSource.extractFromRealm(realm, movies));
                     }
                 } finally {
 
