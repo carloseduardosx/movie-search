@@ -18,9 +18,9 @@ import static org.mockito.Mockito.spy;
 public class MoviesLocalDataSourceTest {
 
     @Test
-    public void shouldReturnNineMoviesWithPagination() {
+    public void paginationShouldReturnTenResultsForFirstPage() {
 
-        List<Movie> movies = getMovies();
+        List<Movie> movies = getMovies(100);
         MoviesLocalDataSource moviesLocalDataSource = new MoviesLocalDataSource();
         moviesLocalDataSource = spy(moviesLocalDataSource);
 
@@ -30,11 +30,50 @@ public class MoviesLocalDataSourceTest {
         assertEquals(10, firstPage.size());
     }
 
-    private List<Movie> getMovies() {
+    @Test
+    public void paginationShouldReturnEightResultsForFirstPage() {
+
+        List<Movie> movies = getMovies(8);
+        MoviesLocalDataSource moviesLocalDataSource = new MoviesLocalDataSource();
+        moviesLocalDataSource = spy(moviesLocalDataSource);
+
+        doReturn(movies).when(moviesLocalDataSource).getSortedMovies();
+
+        List<Movie> firstPage = moviesLocalDataSource.pagination(0);
+        assertEquals(8, firstPage.size());
+    }
+
+    @Test
+    public void paginationShouldReturnTwoResultsForSecondPage() {
+
+        List<Movie> movies = getMovies(12);
+        MoviesLocalDataSource moviesLocalDataSource = new MoviesLocalDataSource();
+        moviesLocalDataSource = spy(moviesLocalDataSource);
+
+        doReturn(movies).when(moviesLocalDataSource).getSortedMovies();
+
+        List<Movie> firstPage = moviesLocalDataSource.pagination(1);
+        assertEquals(2, firstPage.size());
+    }
+
+    @Test
+    public void paginationShouldReturnEmptyResultsForThirdPageWhenStoredMoviesIsLessThanOrEqualTwenty() {
+
+        List<Movie> movies = getMovies(12);
+        MoviesLocalDataSource moviesLocalDataSource = new MoviesLocalDataSource();
+        moviesLocalDataSource = spy(moviesLocalDataSource);
+
+        doReturn(movies).when(moviesLocalDataSource).getSortedMovies();
+
+        List<Movie> firstPage = moviesLocalDataSource.pagination(2);
+        assertEquals(0, firstPage.size());
+    }
+
+    private List<Movie> getMovies(int size) {
 
         List<Movie> movies = new ArrayList<>();
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < size; i++) {
 
             movies.add(mock(Movie.class));
         }

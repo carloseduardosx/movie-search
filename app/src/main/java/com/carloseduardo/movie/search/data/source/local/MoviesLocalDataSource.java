@@ -11,7 +11,6 @@ import java.util.Collections;
 import java.util.List;
 
 import io.realm.Realm;
-import io.realm.RealmResults;
 import io.realm.Sort;
 
 public class MoviesLocalDataSource {
@@ -116,9 +115,12 @@ public class MoviesLocalDataSource {
 
         List<Movie> results = getSortedMovies();
 
-        if (lastPosition > results.size() - 1) {
+        if ((lastPosition > results.size() && results.isEmpty()) || firstPosition > results.size() - 1) {
 
             return Collections.emptyList();
+        } else {
+
+            lastPosition = results.size();
         }
 
         if (page == 0 && results.size() >= 10) {
