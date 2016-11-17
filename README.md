@@ -20,7 +20,7 @@ Used Model View Presenter(MVP) to facilitate separation of responsibilities and 
 
 ## Preview
 
-<img src="./app/src/main/assets/preview.gif" alt="Preview" width="300px" height="500px">
+<img src="./assets/preview.gif" alt="Preview" width="300px" height="500px">
 
 ## Images
 
