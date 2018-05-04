@@ -32,7 +32,7 @@ def getAPIProperty(String key) {
 android {
 
     compileSdkVersion 25
-    buildToolsVersion '25.0.0'
+    buildToolsVersion '27.0.1'
 
     defaultConfig {
 

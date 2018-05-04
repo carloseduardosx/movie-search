@@ -1,7 +1,7 @@
 buildscript {
 
     ext.realmVersion = '2.2.0'
-    ext.androidGradlePluginVersion = '2.2.2'
+    ext.androidGradlePluginVersion = '2.3.2'
     ext.androidAptVersion = '1.8'
 
     repositories {
